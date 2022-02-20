@@ -1,3 +1,4 @@
+//! SOLID example
 #include <iostream>
 #include <vector>
 
