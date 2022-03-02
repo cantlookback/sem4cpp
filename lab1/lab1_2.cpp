@@ -1,69 +1,39 @@
-//! SOLID example
+//!!!! SOLID example
 #include <iostream>
 #include <vector>
 
 using namespace std;
 
-class LookForAnimals;
-class AnimalsTruck;
-
 class Animal{
 public:
-    Animal(string m_name) : name(m_name){};
-    friend class LookForAnimals;
-protected:
+    Animal(string m_name) : name(m_name){}
+    string getName(){ return name; }
+private:
     string name;
 };
 
-class Bear : public Animal{
-public:
-    Bear() : Animal("Bear"){};
-};
-
-class Pig : public Animal{
-public:
-    Pig() : Animal("Pig"){};
-};
-
-class Zoo{
-public:
-    Zoo(){};
-    friend class AnimalsTruck;
-    friend class LookForAnimals;
-protected:
-    vector <Animal*> animals;
-};
-
-class AnimalsTruck{
-public:
-    AnimalsTruck(){};
-    void add(Animal *animal, Zoo *zoo){
-        zoo->animals.push_back(animal);
+class Eating : public Animal{
+public: 
+    Eating(string m_name) : Animal(m_name){}
+    void Feed(string beb){
+        cout << "You fed " << beb << endl;
     }
 };
 
-class LookForAnimals{
+class Pat : public Animal{
 public:
-    LookForAnimals(){};
-    
-    void print(Zoo *zoo){
-        for (auto animal : zoo->animals){
-            cout << animal->name << endl;
-        }
+    Pat(string m_name) : Animal(m_name){}
+    void pat(string beb){
+        cout << "You did pat " << beb << endl;
     }
 };
 
 int main(){
-    Zoo zoo;
-    AnimalsTruck truck;
+    Eating eat("pig");
+    Pat p("wolf");
 
-    truck.add(new Bear(), &zoo);
-    truck.add(new Bear(), &zoo);
-    truck.add(new Pig(), &zoo);
+    eat.Feed("Pig");
+    p.pat("Wolf");
 
-    LookForAnimals look;
-    look.print(&zoo);
-
-
-    return 0;   
+    return 0;
 }
