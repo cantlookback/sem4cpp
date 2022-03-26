@@ -55,7 +55,11 @@ void NeuralNetwork::print(){
             cout << endl;
         }
 }
-    
+
+double NeuralNetwork::sigm(double arg){
+    return 1 / (1 + exp(-arg));
+}
+
 void NeuralNetwork::feedForward(vector<double> *data){
     //Copy data to input layer
     values[0] = *data;
@@ -96,11 +100,7 @@ void NeuralNetwork::train(vector<double> *data, vector<double> *answers){
     unsigned epochs = 1000;
     for (unsigned i = 0; i < epochs; i++){
         for (unsigned j = 0; j < data->size(); j++){
-
+            
         }
     }
-}
-
-double NeuralNetwork::sigm(double arg){
-    return 1 / (1 + exp(-arg));
 }
