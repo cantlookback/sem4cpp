@@ -60,6 +60,11 @@ double NeuralNetwork::sigm(double arg){
     return 1 / (1 + exp(-arg));
 }
 
+double NeuralNetwork::sigm_deriv(double arg){
+    double fx = sigm(arg);
+    return fx * (1 - fx);
+}
+
 void NeuralNetwork::feedForward(vector<double> *data){
     //Copy data to input layer
     values[0] = *data;
@@ -81,7 +86,7 @@ void NeuralNetwork::feedForward(vector<double> *data){
 void NeuralNetwork::setWeights() {
     for (unsigned i = 0; i < weights.size(); i++) {
         for (unsigned j = 0; j < weights[i].size(); j++) {
-            weights[i][j] = 1;  //TODO: make it random pls
+            weights[i][j] = (static_cast<double>(rand()) / RAND_MAX) * 5;
         }
     }
 }
@@ -100,7 +105,15 @@ void NeuralNetwork::train(vector<double> *data, vector<double> *answers){
     unsigned epochs = 1000;
     for (unsigned i = 0; i < epochs; i++){
         for (unsigned j = 0; j < data->size(); j++){
-            
+            feedForward(data);
+
+            for (int i = 0; i < network.second[network.first - 1]; i++){
+                
+            }
+
+
+
         }
     }
 }
+

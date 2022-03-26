@@ -14,6 +14,12 @@ public:
     //Function to view network internals
     void print();
 
+    //Activation funcion
+    double sigm(double arg);
+
+    //Derivative of sigm
+    double sigm_deriv(double arg);
+
     //Feed forward function
     void feedForward(vector<double>* data);
 
@@ -25,9 +31,6 @@ public:
 
     //Training function
     void train(vector<double> *data, vector<double> *answers);
-
-    //Activation funcion
-    double sigm(double arg);
 
 private:
     //* layers, neurons
