@@ -54,6 +54,14 @@ void NeuralNetwork::print(){
             }
             cout << endl;
         }
+        cout << "   D_X     " << endl;
+        for (auto d : d_X){
+            for (auto dd : d){
+                cout << dd << " ";
+            }
+            cout << endl;
+        }
+
 }
 
 double NeuralNetwork::sigm(double arg){
@@ -86,7 +94,7 @@ void NeuralNetwork::feedForward(vector<double> *data){
 void NeuralNetwork::setWeights() {
     for (unsigned i = 0; i < weights.size(); i++) {
         for (unsigned j = 0; j < weights[i].size(); j++) {
-            weights[i][j] = (static_cast<double>(rand()) / RAND_MAX) * 5;
+            weights[i][j] = 1;//(static_cast<double>(rand()) / RAND_MAX) * 5;
         }
     }
 }
@@ -94,23 +102,46 @@ void NeuralNetwork::setWeights() {
 double NeuralNetwork::MSE(vector<double> *Ypred, vector<double> *Ytrue){
     double mse = 0;
     for (int i = 0; i < Ypred->size(); i++){
-        mse += pow(&Ytrue[i] - &Ypred[i], 2);
+        mse += pow((*Ytrue)[i] - (*Ypred)[i], 2);
     }
     mse /= Ypred->size();
     return mse;
 }
 
-void NeuralNetwork::train(vector<double> *data, vector<double> *answers){
+
+//TODO: It's working, but smth wrong, need to fix.
+void NeuralNetwork::train(vector<vector<double>> *data, vector<double> *answers){
     double trainRate = 0.1;
     unsigned epochs = 1000;
-    for (unsigned i = 0; i < epochs; i++){
-        for (unsigned j = 0; j < data->size(); j++){
-            feedForward(data);
+    for (unsigned epoc = 0; epoc < epochs; epoc++){
+        cout << epoc;
+        for (unsigned jija = 0; jija < data->size(); jija++){
+            feedForward(&(*data)[jija]);
+            
+            d_X.resize(network.first);
 
-            for (int i = 0; i < network.second[network.first - 1]; i++){
-                
+            for (int i = 0; i < d_X.size(); i++){
+                d_X[i].resize(network.second[i]);
             }
 
+            for (int i = 0; i < d_X.size(); i++){
+                for (int j = 0; j < d_X[i].size(); j++){
+                    d_X[i][j] = 0;
+                }
+            }
+
+            for (int i = 0; i < d_X[network.first - 1].size(); i++){
+                d_X[network.first - 1][i] = ((*answers)[i] - values[network.first - 1][i]) * sigm_deriv(values[network.first - 1][i]);
+            }
+
+            for (int i = network.first - 2; i >= 0 ; i--){
+                for (int j = 0; j < d_X[i].size(); j++){
+                    for (int k = 0; k < d_X[i + 1].size(); k++){
+                        d_X[i][j] += d_X[i + 1][k] * weights[i][k * network.second[i + 1] + j];
+                    }
+                    d_X[i][j] *= sigm_deriv(values[i][j]);
+                }
+            }
 
 
         }
