@@ -3,16 +3,59 @@
 using namespace std;
 
 int main() {
-    NeuralNetwork net{ 2 };
+    NeuralNetwork net {3};
     net.setWeights();
-    vector<double> data = { 2, 2, 2 };
+
     //net.feedForward(&data);
+
+    vector<vector<double>> viborka = { 
+    {1,2},{1,5},//1 1
+    {1,8},{2,1},//1 1
+    {2,4},{2,7},//1 1
+    {2,2},{2,3},//0 0
+    {3,0},{3,3},//1 1
+    {3,6},{3,9},//1 1
+    {2,5},{4,2},//0 1
+    {2,6},{4,8},//1 1
+    {5,1},{2,8},//1 0
+    {5,4},{2,9},//1 0
+    {5,7},{6,0},//1 1
+    {6,3},{6,6},//1 1
+    {3,1},{6,9},//0 1
+    {7,2},{7,5},//1 1
+    {7,8},{3,2},//1 0
+    {8,1},{8,4},//1 1
+    {3,4},{3,5},//0 0
+    {3,7},{8,7},//0 1
+    {9,0},{9,3},//1 1
+    {9,6},{9,9},//1 1
+    };
     
-    vector<vector<double>> viborka = {{1, -3}}; 
-    vector<double> ans = {1};
-    net.train(&viborka, &ans);
+    vector<double> ans = {1,1,1,1,1,1,0,0,1,1,1,1,0,1,1,1,1,0,1,0,1,1,1,1,0,1,1,1,1,0,1,1,0,0,0,1,1,1,1,1};   
+    
+    vector<vector<double>> v2 = {
+        {-2, -1}, 
+        {25,6},
+        {17,4},
+        {-15,-6},
+        {-2, -1}, 
+        {25,6},
+        {17,4},
+        {-15,-6},
+        {-2, -1}, 
+        {25,6},
+        {17,4},
+        {-15,-6},
+    };
+    vector<double> ans2 = {1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1};
+    net.train(&v2, &ans2);
+
+    vector<double> data = {-7, -3}; // 1
+    vector<double> data2 = {20, 2}; // 0
+    net.feedForward(&data);
     net.print();
-
-
+    net.feedForward(&data2);
+    net.print();
+//|0.937689|-3.26343|
     return 0;
 }

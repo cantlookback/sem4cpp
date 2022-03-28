@@ -21,16 +21,16 @@ public:
     double sigm_deriv(double arg);
 
     //Feed forward function
-    void feedForward(vector<double> *data);
+    void feedForward(vector<double>* data);
 
     //Setting base weights
     void setWeights();
-    
+
     //Function to calculate "Mean Square Error"
-    double MSE(vector<double> *Ypred, vector<double> *Ytrue);
+    double MSE(vector<double>* Ypred, vector<double>* Ytrue);
 
     //Training function
-    void train(vector<vector<double>> *data, vector<double> *answers);
+    void train(vector<vector<double>>* data, vector<double>* answers);
 
 private:
     //* layers, neurons
@@ -39,8 +39,6 @@ private:
     vector<vector<double>> weights;
     //* Values of neurons in each layer
     vector<vector<double>> values;
-    //*d_X
-    vector<vector<double>> d_X;
 };
 
 #endif
