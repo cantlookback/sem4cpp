@@ -27,7 +27,7 @@ public:
     void setWeights();
 
     //Function to calculate "Mean Square Error"
-    double MSE(vector<double>* Ypred, vector<double>* Ytrue);
+    double MSE(vector<double> Ytrue);
 
     //Training function
     void train(vector<vector<double>>* data, vector<double>* answers);

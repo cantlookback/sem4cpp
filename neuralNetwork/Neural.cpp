@@ -22,6 +22,7 @@ NeuralNetwork::NeuralNetwork(int m_layers) {
 }
 
 void NeuralNetwork::print() {
+    
     cout << "----------------------------\n   NUMBER OF LAYERS\n|";
     cout << network.first;
     cout << "|\n----------------------------\n   NUMBER OF NEURONS IN EACH LAYER\n|";
@@ -37,6 +38,7 @@ void NeuralNetwork::print() {
         }
         cout << "\n|";
     }
+    
     cout << "----------------------------\n   VALS\n|";
     for (auto layer : values) {
         for (auto val : layer) {
@@ -80,48 +82,56 @@ void NeuralNetwork::feedForward(vector<double>* data) {
 void NeuralNetwork::setWeights() {
     for (unsigned i = 0; i < weights.size(); i++) {
         for (unsigned j = 0; j < weights[i].size(); j++) {
-            weights[i][j] = (static_cast<double>(rand()) / RAND_MAX) * 5;
+            weights[i][j] = (static_cast<double>(rand()) / RAND_MAX) * 2 - 1;
         }
     }
 }
 
-double NeuralNetwork::MSE(vector<double>* Ypred, vector<double>* Ytrue) {
+double NeuralNetwork::MSE(vector<double> Ytrue) {
     double mse = 0;
-    for (unsigned i = 0; i < Ypred->size(); i++) {
-        mse += pow((*Ytrue)[i] - (*Ypred)[i], 2);
+    vector<double> Ypred;
+    Ypred.push_back(values[network.first - 1][0]);
+    for (unsigned i = 0; i < Ypred.size(); i++) {
+        mse += pow(Ytrue[i] - Ypred[i], 2);
     }
-    mse /= Ypred->size();
+    mse /= Ypred.size();
     return mse;
 }
 
 
 //TODO: It's working, but smth wrong, need to fix.
 void NeuralNetwork::train(vector<vector<double>>* data, vector<double>* answers) {
-    double trainRate = 0.01;
-    double alpha = 0.3;
-    unsigned epochs = 100000;
-    for (unsigned epoc = 0; epoc < epochs; epoc++) {
+    //*d_X | Clean
+    vector<vector<double>> d_X;
+    //* GRADs | Clean
+    vector<vector<double>> GRADs;
+    //* dW | noClean
+    vector<vector<double>> dW;
+    
+    d_X.resize(network.first);
+    GRADs.resize(network.first - 1);
+    dW.resize(weights.size());
+
+    for (unsigned i = 0; i < d_X.size(); i++) {
+        d_X[i].resize(network.second[i]);
+    }
+    for (int i = 0; i < network.first - 1; i++) {
+        GRADs[i].resize(network.second[i] * network.second[i + 1]);
+    }
+    for (int i = 0; i < dW.size(); i++){
+        dW[i].resize(weights[i].size());
+    }
+
+    double trainRate = 1;
+    double alpha = 0.1;
+    
+    for (unsigned epoc = 0; epoc < 1500; epoc++) {
         //cout << epoc;
         for (unsigned jija = 0; jija < data->size(); jija++) {
             feedForward(&(*data)[jija]);
-            
-            //*d_X
-            vector<vector<double>> d_X;
-            //* GRADs
-            vector<vector<double>> GRADs;
-            d_X.resize(network.first);
-            GRADs.resize(network.first - 1);
-
-            for (unsigned i = 0; i < d_X.size(); i++) {
-                d_X[i].resize(network.second[i]);
-            }
-            for (int i = 0; i < network.first - 1; i++) {
-                GRADs[i].resize(network.second[i] * network.second[i + 1]);
-            }
-
 
             for (unsigned i = 0; i < d_X[network.first - 1].size(); i++) {
-                d_X[network.first - 1][i] = ((*answers)[i] - values[network.first - 1][i]) * sigm_deriv(values[network.first - 1][i]);
+                d_X[network.first - 1][i] = ((*answers)[jija] - values[network.first - 1][i]) * sigm_deriv(values[network.first - 1][i]);
             }
 
             for (int i = network.first - 2; i >= 0; i--) {
@@ -164,22 +174,28 @@ void NeuralNetwork::train(vector<vector<double>>* data, vector<double>* answers)
             //G{1,0} = v{1,0} * d{2,0}
             //G{1,1} = v{1,1} * d{2,0}
             //G{1,2} = v{1,2} * d{2,0}
-        
-            vector<vector<double>> dW;
-            dW.resize(weights.size());
-            for (int i = 0; i < dW.size(); i++){
-                dW[i].resize(weights[i].size());
-            }
 
-            for (int i = 0; i < dW.size(); i++){
+            for (unsigned i = 0; i < dW.size(); i++){
                 for (int j = 0; j < dW[i].size(); j++){
                     dW[i][j] = trainRate * GRADs[i][j] + alpha * dW[i][j];
                 }
             }
 
-            for (int i = 0; i < weights.size(); i++){
+            for (unsigned i = 0; i < weights.size(); i++){
                 for (int j = 0; j < weights[i].size(); j++){
                     weights[i][j] += dW[i][j];
+                }
+            }
+
+            for (unsigned i = 0; i < d_X.size(); i++){
+                for (unsigned j = 0; j < d_X[i].size(); j++){
+                    d_X[i][j] = 0;
+                }
+            }
+
+            for (unsigned i = 0; i < GRADs.size(); i++){
+                for (unsigned j = 0; j < GRADs[i].size(); j++){
+                    GRADs[i][j] = 0;
                 }
             }
         }
