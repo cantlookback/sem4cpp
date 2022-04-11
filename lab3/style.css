@@ -1,0 +1,31 @@
+body{
+    background-color: brown;
+}
+
+p{
+    font-size: 40px;
+    font-weight: bold;
+}
+
+p#label{
+    font-size: 40px;
+    color: greenyellow;
+    text-shadow: 1px 1px 30px;
+}
+
+h3{
+    font-style: italic;
+    color: burlywood;
+}
+
+button{
+    margin-left: 100px;
+    margin-top: 50px;
+    border-radius: 10px;
+    border-style:none;
+    box-shadow:1px 1px 20px 5px;
+    background-color:darkturquoise;
+    height: 120px;
+    width: 480px;
+    font-size: 50px;
+}
